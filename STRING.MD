@@ -1,0 +1,1 @@
+<REDACTED_MONGODB_URI>  # removed for security; set via environment variables (VITE_MONGODB_URI / MONGODB_URI).

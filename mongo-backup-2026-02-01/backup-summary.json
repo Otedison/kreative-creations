@@ -1,0 +1,21 @@
+{
+  "date": "2026-02-01",
+  "db": "kreative_db",
+  "summary": [
+    {
+      "collection": "blogs",
+      "count": 0,
+      "file": "/home/otedison/Downloads/kreative web/kreative website/mongo-backup-2026-02-01/blogs.json"
+    },
+    {
+      "collection": "comments",
+      "count": 0,
+      "file": "/home/otedison/Downloads/kreative web/kreative website/mongo-backup-2026-02-01/comments.json"
+    },
+    {
+      "collection": "newsletter_subscribers",
+      "count": 0,
+      "file": "/home/otedison/Downloads/kreative web/kreative website/mongo-backup-2026-02-01/newsletter_subscribers.json"
+    }
+  ]
+}
