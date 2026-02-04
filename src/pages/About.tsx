@@ -36,7 +36,7 @@ const team = [
   {
     name: "Christine Akinyi",
     role: "HR manager",
-    image: "/images/team/christine.png",
+    image: "/images/team/christine.jpeg",
     
   },
   {

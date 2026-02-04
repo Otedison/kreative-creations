@@ -12,6 +12,7 @@ import {
   Edit, 
   Eye, 
   EyeOff,
+  Briefcase,
   LogOut,
   Clock,
   Mail,
@@ -31,6 +32,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import BlogEditor from "@/components/admin/BlogEditor";
 import AdminSettings from "@/components/admin/AdminSettings";
+import JobsManager from "@/components/admin/JobsManager";
+import ApplicationsManager from "@/components/admin/ApplicationsManager";
 
 interface BlogPost {
   id: string;
@@ -80,13 +83,24 @@ const Admin = () => {
     setLoadingData(true);
     
     try {
-      const [blogsRes, subsRes] = await Promise.all([
+      const [blogsRes, subsRes] = await Promise.allSettled([
         getAllBlogs(),
         getAllSubscribers(),
       ]);
 
-      setBlogs(blogsRes || []);
-      setSubscribers(subsRes || []);
+      if (blogsRes.status === "fulfilled") {
+        setBlogs(blogsRes.value || []);
+      } else {
+        console.error("Failed to fetch blogs", blogsRes.reason);
+        setBlogs([]);
+      }
+
+      if (subsRes.status === "fulfilled") {
+        setSubscribers(subsRes.value || []);
+      } else {
+        console.error("Failed to fetch subscribers", subsRes.reason);
+        setSubscribers([]);
+      }
     } catch (err) {
       console.error('Failed to fetch admin data', err);
     }
@@ -186,6 +200,14 @@ const Admin = () => {
               <Users className="w-4 h-4" />
               Subscribers ({subscribers.length})
             </TabsTrigger>
+            <TabsTrigger value="jobs" className="gap-2">
+              <Briefcase className="w-4 h-4" />
+              Jobs
+            </TabsTrigger>
+            <TabsTrigger value="applications" className="gap-2">
+              <MessageCircle className="w-4 h-4" />
+              Applications
+            </TabsTrigger>
             <TabsTrigger value="comments" className="gap-2" asChild>
               <Link to="/admin/comments">
                 <MessageCircle className="w-4 h-4" />
@@ -275,6 +297,14 @@ const Admin = () => {
                 ))}
               </div>
             )}
+          </TabsContent>
+
+          <TabsContent value="jobs" className="space-y-4">
+            <JobsManager />
+          </TabsContent>
+
+          <TabsContent value="applications" className="space-y-4">
+            <ApplicationsManager />
           </TabsContent>
 
           <TabsContent value="subscribers" className="space-y-4">

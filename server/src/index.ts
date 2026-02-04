@@ -114,6 +114,42 @@ function writeCollectionFile(name: string, data: any[]) {
   fs.writeFileSync(p, JSON.stringify(data, null, 2));
 }
 
+function normalizeCategoryCode(category?: string) {
+  if (!category) return 'GEN';
+  const key = category.trim().toLowerCase();
+  const map: Record<string, string> = {
+    engineering: 'ENG',
+    marketing: 'MKT',
+    design: 'DES',
+    product: 'PRD',
+    sales: 'SAL',
+    operations: 'OPS',
+    finance: 'FIN',
+    hr: 'HR',
+    people: 'PEO',
+    content: 'CON',
+    strategy: 'STR',
+  };
+  if (map[key]) return map[key];
+  const letters = category.replace(/[^a-zA-Z]/g, '').toUpperCase();
+  if (!letters) return 'GEN';
+  return letters.slice(0, 3).padEnd(3, 'X');
+}
+
+function nextReferenceFromJobs(jobs: any[], category?: string) {
+  const code = normalizeCategoryCode(category);
+  const prefix = `KC-${code}-`;
+  let max = 0;
+  for (const job of jobs) {
+    const ref = job?.reference;
+    if (typeof ref === 'string' && ref.startsWith(prefix)) {
+      const num = parseInt(ref.slice(prefix.length), 10);
+      if (!Number.isNaN(num)) max = Math.max(max, num);
+    }
+  }
+  const next = String(max + 1).padStart(4, '0');
+  return `${prefix}${next}`;
+}
 
 function verifyAdmin(req: Request, res: Response, next: NextFunction) {
   const auth = (req.headers['authorization'] as string) || '';
@@ -464,6 +500,330 @@ app.delete('/api/blogs/:id', async (req, res) => {
   } catch (error) {
     console.error('Error deleting blog:', error);
     res.status(500).json({ message: 'Failed to delete blog' });
+  }
+});
+
+// ============================================
+// Jobs Routes
+// ============================================
+
+// GET /api/jobs - Get active jobs (public)
+app.get('/api/jobs', async (req, res) => {
+  try {
+    const { category, type, location } = req.query;
+    try {
+      const database = await connectToDatabase();
+      const query: any = { is_active: true };
+      if (category && typeof category === 'string') query.category = category;
+      if (type && typeof type === 'string') query.type = type;
+      if (location && typeof location === 'string') query.location = location;
+      const jobs = await database
+        .collection('jobs')
+        .find(query)
+        .sort({ created_at: -1 })
+        .toArray();
+      const plainJobs = jobs.map(job => {
+        const { _id, ...rest } = job;
+        return { id: _id?.toString(), ...rest };
+      });
+      return res.json(plainJobs);
+    } catch (err) {
+      console.warn('MongoDB not available, using file fallback for jobs:', err?.message || err);
+      const jobs = readCollectionFile('jobs')
+        .filter((j: any) => j.is_active)
+        .filter((j: any) => (category && typeof category === 'string') ? j.category === category : true)
+        .filter((j: any) => (type && typeof type === 'string') ? j.type === type : true)
+        .filter((j: any) => (location && typeof location === 'string') ? j.location === location : true)
+        .sort((a: any, b: any) => (b.created_at || '') > (a.created_at || '') ? 1 : -1)
+        .map((j: any) => ({ id: j.id, ...j }));
+      return res.json(jobs);
+    }
+  } catch (error) {
+    console.error('Error fetching jobs:', error);
+    res.status(500).json({ message: 'Failed to fetch jobs' });
+  }
+});
+
+// GET /api/jobs/all - Get all jobs (admin)
+app.get('/api/jobs/all', verifyAdmin, async (req, res) => {
+  try {
+    try {
+      const database = await connectToDatabase();
+      const jobs = await database
+        .collection('jobs')
+        .find({})
+        .sort({ created_at: -1 })
+        .toArray();
+      const plainJobs = jobs.map(job => {
+        const { _id, ...rest } = job;
+        return { id: _id?.toString(), ...rest };
+      });
+      return res.json(plainJobs);
+    } catch (err) {
+      console.warn('MongoDB not available, using file fallback for admin jobs:', err?.message || err);
+      const jobs = readCollectionFile('jobs')
+        .sort((a: any, b: any) => (b.created_at || '') > (a.created_at || '') ? 1 : -1)
+        .map((j: any) => ({ id: j.id, ...j }));
+      return res.json(jobs);
+    }
+  } catch (error) {
+    console.error('Error fetching jobs:', error);
+    res.status(500).json({ message: 'Failed to fetch jobs' });
+  }
+});
+
+// POST /api/jobs - Create job (admin)
+app.post('/api/jobs', verifyAdmin, async (req, res) => {
+  try {
+    const jobData = req.body || {};
+    const now = new Date().toISOString();
+
+    if (!jobData.title || !jobData.type || !jobData.location) {
+      return res.status(400).json({ message: 'Title, type, and location are required' });
+    }
+
+    try {
+      const database = await connectToDatabase();
+      const existingJobs = await database.collection('jobs').find({}).project({ reference: 1, category: 1 }).toArray();
+      const reference = jobData.reference || nextReferenceFromJobs(existingJobs, jobData.category);
+      const result = await database.collection('jobs').insertOne({
+        ...jobData,
+        reference,
+        is_active: jobData.is_active ?? true,
+        created_at: now,
+        updated_at: now,
+      });
+      return res.status(201).json({ id: result.insertedId.toString(), ...jobData, reference });
+    } catch (err) {
+      console.warn('MongoDB not available, using file fallback to create job:', err?.message || err);
+      const jobs = readCollectionFile('jobs');
+      const id = Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
+      const reference = jobData.reference || nextReferenceFromJobs(jobs, jobData.category);
+      const doc = { id, ...jobData, reference, is_active: jobData.is_active ?? true, created_at: now, updated_at: now };
+      jobs.unshift(doc);
+      writeCollectionFile('jobs', jobs);
+      return res.status(201).json({ id, ...jobData, reference });
+    }
+  } catch (error) {
+    console.error('Error creating job:', error);
+    res.status(500).json({ message: 'Failed to create job' });
+  }
+});
+
+// PUT /api/jobs/:id - Update job (admin)
+app.put('/api/jobs/:id', verifyAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body || {};
+
+    try {
+      const database = await connectToDatabase();
+      const { ObjectId } = await import('mongodb');
+      const result = await database.collection('jobs').updateOne(
+        { _id: new ObjectId(id) },
+        { $set: { ...updates, updated_at: new Date().toISOString() } }
+      );
+      if (result.modifiedCount === 0) return res.status(404).json({ message: 'Job not found' });
+      return res.json({ success: true });
+    } catch (err) {
+      console.warn('MongoDB not available, using file fallback to update job:', err?.message || err);
+      const jobs = readCollectionFile('jobs');
+      const idx = jobs.findIndex((j: any) => j.id === id);
+      if (idx === -1) return res.status(404).json({ message: 'Job not found' });
+      jobs[idx] = { ...jobs[idx], ...updates, updated_at: new Date().toISOString() };
+      writeCollectionFile('jobs', jobs);
+      return res.json({ success: true });
+    }
+  } catch (error) {
+    console.error('Error updating job:', error);
+    res.status(500).json({ message: 'Failed to update job' });
+  }
+});
+
+// DELETE /api/jobs/:id - Delete job (admin)
+app.delete('/api/jobs/:id', verifyAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    try {
+      const database = await connectToDatabase();
+      const { ObjectId } = await import('mongodb');
+      const result = await database.collection('jobs').deleteOne({ _id: new ObjectId(id) });
+      if (result.deletedCount === 0) return res.status(404).json({ message: 'Job not found' });
+      return res.json({ success: true });
+    } catch (err) {
+      console.warn('MongoDB not available, using file fallback to delete job:', err?.message || err);
+      const jobs = readCollectionFile('jobs');
+      const newJobs = jobs.filter((j: any) => j.id !== id);
+      if (newJobs.length === jobs.length) return res.status(404).json({ message: 'Job not found' });
+      writeCollectionFile('jobs', newJobs);
+      return res.json({ success: true });
+    }
+  } catch (error) {
+    console.error('Error deleting job:', error);
+    res.status(500).json({ message: 'Failed to delete job' });
+  }
+});
+
+// POST /api/jobs/:id/apply - Submit job application (public)
+app.post('/api/jobs/:id/apply', async (req, res) => {
+  try {
+    const { id: jobId } = req.params;
+    const { name, email, phone, portfolio, cover_letter, resume_url, job_title } = req.body || {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!name || !email || !emailRegex.test(email)) {
+      return res.status(400).json({ message: 'Valid name and email are required' });
+    }
+
+    const now = new Date().toISOString();
+    const application = {
+      job_id: jobId,
+      job_title: job_title || '',
+      name,
+      email,
+      phone: phone || '',
+      portfolio: portfolio || '',
+      cover_letter: cover_letter || '',
+      resume_url: resume_url || '',
+      status: 'new',
+      created_at: now,
+      updated_at: now,
+    };
+
+    try {
+      const database = await connectToDatabase();
+      const result = await database.collection('job_applications').insertOne(application);
+      return res.status(201).json({ id: result.insertedId.toString(), ...application });
+    } catch (err) {
+      console.warn('MongoDB not available, using file fallback to create application:', err?.message || err);
+      const applications = readCollectionFile('job_applications');
+      const id = Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
+      const doc = { id, ...application };
+      applications.unshift(doc);
+      writeCollectionFile('job_applications', applications);
+      return res.status(201).json({ id, ...application });
+    }
+  } catch (error) {
+    console.error('Error creating application:', error);
+    res.status(500).json({ message: 'Failed to submit application' });
+  }
+});
+
+// GET /api/applications/admin/all - Get all applications (admin)
+app.get('/api/applications/admin/all', verifyAdmin, async (req, res) => {
+  try {
+    try {
+      const database = await connectToDatabase();
+      const applications = await database
+        .collection('job_applications')
+        .find({})
+        .sort({ created_at: -1 })
+        .toArray();
+      const plainApps = applications.map(app => {
+        const { _id, ...rest } = app;
+        return { id: _id?.toString(), ...rest };
+      });
+      return res.json(plainApps);
+    } catch (err) {
+      console.warn('MongoDB not available, using file fallback for applications:', err?.message || err);
+      const applications = readCollectionFile('job_applications')
+        .sort((a: any, b: any) => (b.created_at || '') > (a.created_at || '') ? 1 : -1)
+        .map((a: any) => ({ id: a.id, ...a }));
+      return res.json(applications);
+    }
+  } catch (error) {
+    console.error('Error fetching applications:', error);
+    res.status(500).json({ message: 'Failed to fetch applications' });
+  }
+});
+
+// GET /api/applications/admin/job/:jobId - Get applications for a job (admin)
+app.get('/api/applications/admin/job/:jobId', verifyAdmin, async (req, res) => {
+  try {
+    const { jobId } = req.params;
+    try {
+      const database = await connectToDatabase();
+      const applications = await database
+        .collection('job_applications')
+        .find({ job_id: jobId })
+        .sort({ created_at: -1 })
+        .toArray();
+      const plainApps = applications.map(app => {
+        const { _id, ...rest } = app;
+        return { id: _id?.toString(), ...rest };
+      });
+      return res.json(plainApps);
+    } catch (err) {
+      console.warn('MongoDB not available, using file fallback for job applications:', err?.message || err);
+      const applications = readCollectionFile('job_applications')
+        .filter((a: any) => a.job_id === jobId)
+        .sort((a: any, b: any) => (b.created_at || '') > (a.created_at || '') ? 1 : -1)
+        .map((a: any) => ({ id: a.id, ...a }));
+      return res.json(applications);
+    }
+  } catch (error) {
+    console.error('Error fetching applications by job:', error);
+    res.status(500).json({ message: 'Failed to fetch applications' });
+  }
+});
+
+// PUT /api/applications/admin/:id - Update application status (admin)
+app.put('/api/applications/admin/:id', verifyAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body || {};
+    const safeUpdates = {
+      status: updates.status,
+      notes: updates.notes,
+      updated_at: new Date().toISOString(),
+    };
+
+    try {
+      const database = await connectToDatabase();
+      const { ObjectId } = await import('mongodb');
+      const result = await database.collection('job_applications').updateOne(
+        { _id: new ObjectId(id) },
+        { $set: safeUpdates }
+      );
+      if (result.modifiedCount === 0) return res.status(404).json({ message: 'Application not found' });
+      return res.json({ success: true });
+    } catch (err) {
+      console.warn('MongoDB not available, using file fallback to update application:', err?.message || err);
+      const applications = readCollectionFile('job_applications');
+      const idx = applications.findIndex((a: any) => a.id === id);
+      if (idx === -1) return res.status(404).json({ message: 'Application not found' });
+      applications[idx] = { ...applications[idx], ...safeUpdates };
+      writeCollectionFile('job_applications', applications);
+      return res.json({ success: true });
+    }
+  } catch (error) {
+    console.error('Error updating application:', error);
+    res.status(500).json({ message: 'Failed to update application' });
+  }
+});
+
+// DELETE /api/applications/admin/:id - Delete application (admin)
+app.delete('/api/applications/admin/:id', verifyAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    try {
+      const database = await connectToDatabase();
+      const { ObjectId } = await import('mongodb');
+      const result = await database.collection('job_applications').deleteOne({ _id: new ObjectId(id) });
+      if (result.deletedCount === 0) return res.status(404).json({ message: 'Application not found' });
+      return res.json({ success: true });
+    } catch (err) {
+      console.warn('MongoDB not available, using file fallback to delete application:', err?.message || err);
+      const applications = readCollectionFile('job_applications');
+      const newApps = applications.filter((a: any) => a.id !== id);
+      if (newApps.length === applications.length) return res.status(404).json({ message: 'Application not found' });
+      writeCollectionFile('job_applications', newApps);
+      return res.json({ success: true });
+    }
+  } catch (error) {
+    console.error('Error deleting application:', error);
+    res.status(500).json({ message: 'Failed to delete application' });
   }
 });
 
@@ -866,4 +1226,3 @@ app.listen(PORT, () => {
 });
 
 export default app;
-

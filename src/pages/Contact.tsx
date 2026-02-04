@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Send, Calendar, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
 
 const services = [
   "Website Development",
@@ -23,8 +22,6 @@ const budgetRanges = [
 ];
 
 const Contact = () => {
-  const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -36,6 +33,12 @@ const Contact = () => {
     consent: false,
   });
 
+  const servicesText = useMemo(() => formData.services.join(", "), [formData.services]);
+  const nextUrl =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/contact?success=true`
+      : "/contact?success=true";
+
   const handleServiceToggle = (service: string) => {
     setFormData(prev => ({
       ...prev,
@@ -43,63 +46,6 @@ const Contact = () => {
         ? prev.services.filter(s => s !== service)
         : [...prev.services, service]
     }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Format services and budget for submission
-    const servicesText = formData.services.join(", ");
-    
-    // Create FormData for FormSubmit
-    const formElement = e.target as HTMLFormElement;
-    const formDataToSubmit = new FormData(formElement);
-    
-    // Add FormSubmit specific fields
-    formDataToSubmit.append("_subject", "New Contact Form Submission - Kreative Creations");
-    formDataToSubmit.append("_replyto", formData.email);
-    formDataToSubmit.append("_next", window.location.origin + "/contact?success=true");
-    formDataToSubmit.append("_template", "table");
-    formDataToSubmit.append("services", servicesText);
-    formDataToSubmit.append("budget", formData.budget);
-    formDataToSubmit.append("consent", formData.consent ? "Yes" : "No");
-    
-    // Submit to FormSubmit
-    try {
-      const response = await fetch("https://formsubmit.co/d5f27201196224a39e1c37a29561b232", {
-        method: "POST",
-        body: formDataToSubmit,
-      });
-      
-      if (response.ok) {
-        toast({
-          title: "Message Sent!",
-          description: "We'll get back to you within 24 hours.",
-        });
-        
-        setFormData({
-          name: "",
-          email: "",
-          phoneNumber: "",
-          company: "",
-          services: [],
-          budget: "",
-          message: "",
-          consent: false,
-        });
-      } else {
-        throw new Error("Submission failed");
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-        variant: "destructive",
-      });
-    }
-    
-    setIsSubmitting(false);
   };
 
   return (
@@ -125,12 +71,25 @@ const Contact = () => {
           <div className="grid lg:grid-cols-3 gap-12">
             {/* Form */}
             <div className="lg:col-span-2">
-              <form onSubmit={handleSubmit} className="space-y-8">
+              <form
+                action="https://formsubmit.co/d5f27201196224a39e1c37a29561b232"
+                method="POST"
+                className="space-y-8"
+              >
+                <input type="hidden" name="_subject" value="New Contact Form Submission - Kreative Creations" />
+                <input type="hidden" name="_replyto" value={formData.email} />
+                <input type="hidden" name="_next" value={nextUrl} />
+                <input type="hidden" name="_template" value="table" />
+                <input type="hidden" name="services" value={servicesText} />
+                <input type="hidden" name="budget" value={formData.budget} />
+                <input type="hidden" name="consent" value={formData.consent ? "Yes" : "No"} />
+
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium mb-2">Your Name *</label>
                     <Input
                       required
+                      name="name"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="John Doe"
@@ -142,6 +101,7 @@ const Contact = () => {
                     <Input
                       required
                       type="email"
+                      name="email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="john@company.com"
@@ -153,6 +113,7 @@ const Contact = () => {
                     <Input
                       required
                       type="tel"
+                      name="phoneNumber"
                       value={formData.phoneNumber}
                       onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
                       placeholder="+254 7XX XXX XXX"
@@ -164,6 +125,7 @@ const Contact = () => {
                 <div>
                   <label className="block text-sm font-medium mb-2">Company Name</label>
                   <Input
+                    name="company"
                     value={formData.company}
                     onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                     placeholder="Your Company"
@@ -218,6 +180,7 @@ const Contact = () => {
                   <label className="block text-sm font-medium mb-2">Tell Us About Your Project *</label>
                   <Textarea
                     required
+                    name="message"
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     placeholder="Describe your project, goals, and timeline..."
@@ -245,10 +208,9 @@ const Contact = () => {
                   type="submit" 
                   variant="coral" 
                   size="xl" 
-                  disabled={isSubmitting}
                   className="w-full md:w-auto"
                 >
-                  {isSubmitting ? "Sending..." : "Send Message"}
+                  Send Message
                   <Send className="w-5 h-5 ml-2" />
                 </Button>
               </form>
