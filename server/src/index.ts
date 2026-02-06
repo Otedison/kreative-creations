@@ -1220,6 +1220,11 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Root endpoint for platform health checks
+app.get('/', (req, res) => {
+  res.status(200).send('Kreative API is running. See /api/health.');
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 API Server running on http://localhost:${PORT}`);
