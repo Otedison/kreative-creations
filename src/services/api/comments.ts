@@ -1,7 +1,7 @@
 // Comment API Service - MongoDB
 // All comment-related API calls go through this service
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
 // Helper function for API requests
 async function apiRequest<T>(

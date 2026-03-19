@@ -1,5 +1,8 @@
-import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
 import { Menu, X, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
@@ -15,15 +18,31 @@ const navLinks = [
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation();
+  const [isSecondaryNavHidden, setIsSecondaryNavHidden] = useState(false);
+  const pathname = usePathname();
   const { isAdmin } = useAuth();
 
+  // Track scroll position to adjust Navbar position when SecondaryNav is hidden
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      // SecondaryNav hides after scrolling past 10px and scrolling down
+      // Navbar should move to top-0 when SecondaryNav is hidden
+      setIsSecondaryNavHidden(currentScrollY > 10);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 glass">
+    <nav className={`fixed left-0 right-0 z-40 glass transition-all duration-300 ${
+      isSecondaryNavHidden ? "top-0" : "top-12"
+    }`}>
       <div className="container-tight">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
+          <Link href="/" className="flex items-center gap-2 group">
             <img src="/krc.png" alt="Kreative Creations" className="h-10 w-auto" />
           </Link>
 
@@ -32,9 +51,9 @@ const Navbar = () => {
             {navLinks.map((link) => (
               <Link
                 key={link.path}
-                to={link.path}
+                href={link.path}
                 className={`text-sm font-medium transition-colors duration-200 link-underline ${
-                  location.pathname === link.path
+                  pathname === link.path
                     ? "text-accent"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
@@ -48,13 +67,16 @@ const Navbar = () => {
           <div className="hidden lg:flex items-center gap-3">
             {isAdmin && (
               <Button variant="ghost" size="icon" asChild>
-                <Link to="/admin" title="Admin Dashboard">
+                <Link href="/admin" title="Admin Dashboard">
                   <Settings className="w-5 h-5" />
                 </Link>
               </Button>
             )}
             <Button variant="coral" asChild>
-              <Link to="/contact">Start Your Project</Link>
+              <Link href="/contact">Start Your Project</Link>
+            </Button>
+            <Button variant="coral-outline" asChild>
+              <Link href="/donate">Donate</Link>
             </Button>
           </div>
 
@@ -75,10 +97,10 @@ const Navbar = () => {
             {navLinks.map((link) => (
               <Link
                 key={link.path}
-                to={link.path}
+                href={link.path}
                 onClick={() => setIsOpen(false)}
                 className={`block text-base font-medium transition-colors ${
-                  location.pathname === link.path
+                  pathname === link.path
                     ? "text-accent"
                     : "text-muted-foreground"
                 }`}
@@ -88,7 +110,7 @@ const Navbar = () => {
             ))}
             {isAdmin && (
               <Link
-                to="/admin"
+                href="/admin"
                 onClick={() => setIsOpen(false)}
                 className="block text-base font-medium text-accent"
               >
@@ -96,8 +118,13 @@ const Navbar = () => {
               </Link>
             )}
             <Button variant="coral" className="w-full mt-4" asChild>
-              <Link to="/contact" onClick={() => setIsOpen(false)}>
+              <Link href="/contact" onClick={() => setIsOpen(false)}>
                 Start Your Project
+              </Link>
+            </Button>
+            <Button variant="coral-outline" className="w-full mt-2" asChild>
+              <Link href="/donate" onClick={() => setIsOpen(false)}>
+                Donate
               </Link>
             </Button>
           </div>

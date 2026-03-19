@@ -4,9 +4,9 @@
 
 import { MongoClient, Db, Collection, ObjectId } from 'mongodb';
 
-const MONGODB_URI = import.meta.env.VITE_MONGODB_URI || '' /* set in .env as VITE_MONGODB_URI */;  
+const MONGODB_URI = process.env.MONGODB_URI || '' /* set in .env as MONGODB_URI */;  
 // NOTE: any embedded credentials were removed for security.
-const MONGODB_DB_NAME = import.meta.env.VITE_MONGODB_DB_NAME || 'kreative_db';
+const MONGODB_DB_NAME = process.env.MONGODB_DB_NAME || 'kreative_db';
 
 let client: MongoClient | null = null;
 let db: Db | null = null;
@@ -631,4 +631,3 @@ export async function updateSubscriber(id: string, updates: Partial<NewsletterSu
     return result.modifiedCount > 0;
   }
 }
-

@@ -31,6 +31,10 @@ const partners = [
     name: "Exquisite Fashion",
     logo: "/images/partners/exquisite.png",
   },
+  {
+    name: "Majesty",
+    logo: "/images/partners/majesty.png",
+  },
 ];
 
 export default partners;

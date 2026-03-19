@@ -1,3 +1,5 @@
+"use client";
+
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 
 interface AuthContextType {
@@ -21,7 +23,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const API_BASE = (import.meta.env.VITE_API_URL as string) || '/api';
+  const API_BASE = (process.env.NEXT_PUBLIC_API_URL as string) || '/api';
 
   useEffect(() => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('admin_token') : null;

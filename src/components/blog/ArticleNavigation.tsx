@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+"use client";
+
+import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { BlogPost } from "@/types/blog";
 
@@ -25,7 +27,7 @@ const ArticleNavigation = ({
           {/* Previous Post */}
           {previousPost ? (
             <Link
-              to={`/blog/${previousPost.slug}`}
+              href={`/blog/${previousPost.slug}`}
               className="group flex items-center gap-4 p-4 rounded-2xl bg-card border border-border hover:border-coral/50 transition-all hover-lift"
             >
               <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center flex-shrink-0 group-hover:bg-coral/10 transition-colors">
@@ -47,7 +49,7 @@ const ArticleNavigation = ({
           {/* Next Post */}
           {nextPost ? (
             <Link
-              to={`/blog/${nextPost.slug}`}
+              href={`/blog/${nextPost.slug}`}
               className="group flex items-center gap-4 p-4 rounded-2xl bg-card border border-border hover:border-coral/50 transition-all hover-lift"
             >
               <div className="flex-1 text-right">

@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+"use client";
+
+import Link from "next/link";
 import { Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -47,7 +49,7 @@ const Tags = ({
             return (
               <Link
                 key={tag.id}
-                to={`/blog?tag=${encodeURIComponent(tag.name)}`}
+                href={`/blog?tag=${encodeURIComponent(tag.name)}`}
                 className={cn(
                   "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-all duration-200",
                   isActive
@@ -75,7 +77,7 @@ const Tags = ({
 
           {remainingCount > 0 && (
             <Link
-              to="/blog"
+              href="/blog"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm bg-secondary hover:bg-secondary/80 text-muted-foreground hover:text-foreground transition-all duration-200"
             >
               +{remainingCount} more

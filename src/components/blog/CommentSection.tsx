@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { MessageCircle, User, Send, X, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -32,7 +34,7 @@ interface CommentSectionProps {
 }
 
 // API URL - change this to your server URL
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
 const CommentSection = ({ slug, blogId }: CommentSectionProps) => {
   const [comments, setComments] = useState<CommentWithAuthor[]>([]);

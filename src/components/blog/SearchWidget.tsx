@@ -1,5 +1,7 @@
+"use client";
+
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -14,12 +16,12 @@ const SearchWidget = ({
   title = "Search",
 }: SearchWidgetProps) => {
   const [query, setQuery] = useState("");
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim()) {
-      navigate(`/blog?search=${encodeURIComponent(query.trim())}`);
+      router.push(`/blog?search=${encodeURIComponent(query.trim())}`);
     }
   };
 
@@ -73,7 +75,7 @@ const SearchWidget = ({
             {["React", "SEO", "Design", "Performance"].map((term) => (
               <button
                 key={term}
-                onClick={() => navigate(`/blog?search=${term}`)}
+                onClick={() => router.push(`/blog?search=${term}`)}
                 className="text-xs px-2 py-1 rounded-md bg-secondary text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-colors"
               >
                 {term}
@@ -87,4 +89,3 @@ const SearchWidget = ({
 };
 
 export default SearchWidget;
-

@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+"use client";
+
+import Link from "next/link";
 import { Clock } from "lucide-react";
 import { format } from "date-fns";
 import { RecentPost } from "@/types/blog";
@@ -55,7 +57,7 @@ const RecentPosts = ({
         {filteredPosts.map((post) => (
           <Link
             key={post.id}
-            to={`/blog/${post.slug}`}
+            href={`/blog/${post.slug}`}
             className="group flex gap-4 items-start"
           >
             {/* Thumbnail */}
@@ -95,7 +97,7 @@ const RecentPosts = ({
       {/* View All Link */}
       <div className="p-4 border-t border-border">
         <Link
-          to="/blog"
+          href="/blog"
           className="text-sm text-accent font-medium hover:text-accent/80 transition-colors flex items-center justify-center gap-1"
         >
           View All Posts

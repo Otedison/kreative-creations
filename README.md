@@ -54,7 +54,7 @@ npm run dev
 
 This project is built with:
 
-- Vite
+- Next.js (App Router)
 - TypeScript
 - React
 - shadcn-ui
@@ -74,8 +74,20 @@ Yes — connect a domain via your hosting provider's settings (Vercel/Netlify/Cl
 
 This project uses a simple MongoDB + JWT-based admin login for local development. To sign in as admin:
 
-1. Send POST /api/admin/login with JSON body { "password": "<ADMIN_PASSWORD>" } (the password is stored in `.env` as `ADMIN_PASSWORD`).
+1. Send POST /api/admin/login with JSON body { "password": "<ADMIN_PASSWORD>" } (the password is stored in `.env.local` as `ADMIN_PASSWORD`).
 2. The response will include a `token`. Store it in localStorage as `admin_token` or send it in the `Authorization: Bearer <token>` header on admin API requests.
 
 Note: Rotate `ADMIN_JWT_SECRET` and `ADMIN_PASSWORD` before deploying to production.
 
+## Environment variables
+
+Create a `.env.local` file at the project root and include:
+
+```
+NEXT_PUBLIC_API_URL=http://localhost:3001/api
+NEXT_PUBLIC_SITE_URL=https://kreativecreations.co.ke
+MONGODB_URI=your_mongodb_connection_string
+MONGODB_DB_NAME=kreative_db
+ADMIN_PASSWORD=your_admin_password
+ADMIN_JWT_SECRET=your_admin_jwt_secret
+```

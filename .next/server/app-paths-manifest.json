@@ -1,0 +1,10 @@
+{
+  "/page": "app/page.js",
+  "/blog/page": "app/blog/page.js",
+  "/blog/[slug]/page": "app/blog/[slug]/page.js",
+  "/about/page": "app/about/page.js",
+  "/auth/page": "app/auth/page.js",
+  "/services/page": "app/services/page.js",
+  "/portfolio/page": "app/portfolio/page.js",
+  "/contact/page": "app/contact/page.js"
+}

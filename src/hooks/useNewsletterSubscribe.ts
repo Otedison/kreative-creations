@@ -1,9 +1,11 @@
+"use client";
+
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 
 // API URL - change this to your server URL
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
 const emailSchema = z.string().email("Please enter a valid email address");
 

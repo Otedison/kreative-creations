@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+"use client";
+
+import Link from "next/link";
 import { FolderOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -44,7 +46,7 @@ const Categories = ({
             return (
               <Link
                 key={category.id}
-                to={`/blog?category=${category.slug}`}
+                href={`/blog?category=${category.slug}`}
                 className={cn(
                   "group flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all duration-200",
                   isActive
