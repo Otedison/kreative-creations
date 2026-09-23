@@ -12,6 +12,11 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://kreativecreations.co.ke/courses/website-development</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://kreativecreations.co.ke/portfolio</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -27,6 +32,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://kreativecreations.co.ke/donate</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://kreativecreations.co.ke/careers</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -38,6 +48,16 @@
   </url>
   
   <!-- Case Study Pages -->
+  <url>
+    <loc>https://kreativecreations.co.ke/case-study/bonga-na-jacinta-wellness</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://kreativecreations.co.ke/case-study/calvoice-academy</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
   <url>
     <loc>https://kreativecreations.co.ke/case-study/aemncs</loc>
     <changefreq>monthly</changefreq>

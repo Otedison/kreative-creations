@@ -10,6 +10,7 @@ import Navbar from "@/components/Navbar";
 import SecondaryNav from "@/components/SecondaryNav";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import BrowserProtection from "@/components/BrowserProtection";
 
 export default function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
@@ -26,6 +27,7 @@ export default function Providers({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
+        <BrowserProtection />
         <Toaster />
         <Sonner />
         <AuthProvider>

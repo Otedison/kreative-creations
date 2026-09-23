@@ -90,4 +90,8 @@ MONGODB_URI=your_mongodb_connection_string
 MONGODB_DB_NAME=kreative_db
 ADMIN_PASSWORD=your_admin_password
 ADMIN_JWT_SECRET=your_admin_jwt_secret
+ZETU_PAY_API_URL=https://your-zetupay-api-host/api/v1/payment/initiate
+ZETU_PAY_SECRET_KEY=your_zetupay_sk_test_or_sk_live_key
 ```
+
+Invoice payments are available at `/pay`. Configure the Zetu Pay values above and point the provider webhook to `/api/payments/webhook`.

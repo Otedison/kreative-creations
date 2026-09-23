@@ -10,6 +10,9 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+out
+.next
+*.zip
 *.local
 
 # Editor directories and files
@@ -26,6 +29,7 @@ dist-ssr
 # Environment
 .env
 .env.local
+.env.*
 .env.*.local
 
 # Server uploads and runtime data

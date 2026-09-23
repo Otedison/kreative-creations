@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/metadata";
 import { getBlogBySlug } from "@/data/blogs";
+import { staticBlogPosts } from "@/data/blogs";
 import BlogDetail from "@/views/BlogDetail";
+
+export function generateStaticParams() {
+  return staticBlogPosts.map((post) => ({ slug: post.slug }));
+}
 
 export async function generateMetadata({
   params,

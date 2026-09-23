@@ -4,6 +4,10 @@ import Link from "next/link";
 import { ArrowRight, Heart, Target, Users, Code, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SEOHead from "@/components/SEOHead";
+import edison from "@/images/team/edison.png";
+import christine from "@/images/team/christine.jpeg";
+import dickson from "@/images/team/dickson.png";
+import hannah from "@/images/team/hannah.jpeg";
 
 const values = [
   {
@@ -32,25 +36,25 @@ const team = [
   {
     name: "Otieno Edison",
     role: "Founder & Creative Director",
-    image: "/images/team/edison.png",
+    image: edison.src,
     
   },
 
   {
     name: "Christine Akinyi",
     role: "HR manager",
-    image: "/images/team/christine.jpeg",
+    image: christine.src,
     
   },
   {
     name: "Dickson Aluoch",
     role: "Marketing & Consultancy",
-    image: "/images/team/dickson.png",
+    image: dickson.src,
   },
   {
     name: "Hannah Dorcas",
     role: "Graphic Designer",
-    image: "/images/team/hannah.jpeg",
+    image: hannah.src,
   },
 ];
 
@@ -178,7 +182,6 @@ const About = () => {
                 </div>
                 <h3 className="text-xl font-bold">{member.name}</h3>
                 <p className="text-coral font-medium text-sm mt-1">{member.role}</p>
-                <p className="text-muted-foreground text-sm mt-2">{member.bio}</p>
               </div>
             ))}
           </div>

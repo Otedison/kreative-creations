@@ -1,41 +1,60 @@
+import donc from "@/images/partners/donc.png";
+import bonga from "@/images/partners/bonga.png";
+import jukwaa from "@/images/partners/jukwaa.png";
+import aenmcs from "@/images/partners/aenmcs.png";
+import hera from "@/images/partners/HERA.png";
+import dira from "@/images/partners/dira.jpeg";
+import ruccsa from "@/images/partners/ruccsa.png";
+import exquisite from "@/images/partners/exquisite.png";
+import majesty from "@/images/partners/majesty.png";
+import jejoFoundation from "@/images/partners/Jejofoundation.png";
+import joycare from "@/images/partners/joycare.jpeg";
+
 const partners = [
   {
     name: "DonC Studios",
-    logo: "/images/partners/donc.png",
+    logo: donc.src,
   },
   {
     name: "Luxe Fashion",
-    logo: "/images/partners/bonga.png",
+    logo: bonga.src,
   },
   {
     name: "Artisan Co",
-    logo: "/images/partners/jukwaa.png",
+    logo: jukwaa.src,
   },
   {
     name: "FinPro",
-    logo: "/images/partners/aenmcs.png",
+    logo: aenmcs.src,
   },
   {
     name: "Nexus Tech",
-    logo: "/images/partners/HERA.png",
+    logo: hera.src,
   },
   {
     name: "Bloom Health",
-    logo: "/images/partners/dira.jpeg",
+    logo: dira.src,
   },
   {
     name: "Velocity",
-    logo: "/images/partners/ruccsa.png",
+    logo: ruccsa.src,
   },
   {
     name: "Exquisite Fashion",
-    logo: "/images/partners/exquisite.png",
+    logo: exquisite.src,
   },
   {
     name: "Majesty",
-    logo: "/images/partners/majesty.png",
+    logo: majesty.src,
+  },
+  {
+    name: "Jejo Foundation",
+    logo: jejoFoundation.src,
+  },
+  {
+    name: "Joycare Cleaning Services",
+    logo: joycare.src,
   },
 ];
 
 export default partners;
-

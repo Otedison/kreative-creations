@@ -5,6 +5,13 @@ const siteName = "Kreative Creations";
 const defaultImage = "https://kreativecreations.co.ke/krc.png";
 const defaultDescription =
   "Digital marketing agency specializing in website development, e-commerce solutions, and full-service digital marketing. We build strategic digital foundations that drive growth.";
+const defaultKeywords = [
+  "web development agency Kenya",
+  "website design Nairobi",
+  "digital marketing Kenya",
+  "e-commerce development",
+  "SEO services Nairobi",
+];
 
 const toAbsoluteUrl = (value?: string) => {
   if (!value) return undefined;
@@ -41,6 +48,10 @@ export function buildMetadata({
   return {
     title: fullTitle,
     description: metaDescription,
+    keywords: tags?.length ? [...defaultKeywords, ...tags] : defaultKeywords,
+    authors: [{ name: siteName, url: siteUrl }],
+    creator: siteName,
+    publisher: siteName,
     alternates: { canonical: fullUrl },
     robots,
     openGraph: {
@@ -49,7 +60,7 @@ export function buildMetadata({
       type,
       url: fullUrl,
       siteName,
-      images: [{ url: fullImage }],
+      images: [{ url: fullImage, alt: fullTitle }],
       locale: "en_KE",
     },
     twitter: {
@@ -59,6 +70,9 @@ export function buildMetadata({
       description: metaDescription,
       images: [fullImage],
     },
+    ...(type === "article"
+      ? { article: { publishedTime, authors: author ? [author] : undefined, tags } }
+      : {}),
     other: {
       ...(type === "article" && publishedTime ? { "article:published_time": publishedTime } : {}),
       ...(type === "article" && author ? { "article:author": author } : {}),
@@ -72,4 +86,5 @@ export const seoDefaults = {
   siteName,
   defaultImage,
   defaultDescription,
+  defaultKeywords,
 };

@@ -1,3 +1,13 @@
+import calvoiceAcademy from "@/images/projects/calvoice academy.png";
+import bongaNaJacinta from "@/images/projects/bonganajacinta.png";
+import twiddle from "@/images/projects/twiddle.png";
+import mcdon from "@/images/projects/mcdon.png";
+import jukwaa from "@/images/projects/jukwaa.png";
+import jejo from "@/images/projects/jejo.png";
+import exquisite from "@/images/projects/exquisite.png";
+import dirak from "@/images/projects/dirak.png";
+import aem from "@/images/projects/aem.png";
+
 export interface Project {
   slug: string;
   title: string;
@@ -21,7 +31,51 @@ export interface Project {
   projectUrl?: string;
 }
 
-export const projects: Project[] = [
+const rawProjects: Project[] = [
+  {
+    slug: "bonga-na-jacinta-wellness",
+    title: "Bonga na Jacinta Wellness",
+    category: "Wellness Website",
+    image: "/images/projects/bonganajacinta.png",
+    heroImage: "/images/projects/bonganajacinta.png",
+    description: "A welcoming digital home for a mental wellness practice, helping clients discover services and book appointments with ease.",
+    challenge: "Bonga na Jacinta Wellness needed an online presence that could communicate their calm, people-first approach while making it simple for prospective clients to learn about their services and take the next step.",
+    solution: "We designed and developed a warm, accessible website with clear service information, thoughtful visual storytelling, contact details, and appointment-focused calls to action. The result reflects the practice's supportive approach and gives visitors a clear route to connect.",
+    results: ["Established a professional, trusted online presence", "Made wellness services easier for visitors to explore", "Created clear pathways for appointment enquiries", "Delivered a responsive experience across devices"],
+    testimonial: {
+      quote: "Our website now gives clients a welcoming place to learn about our services and reach out when they are ready.",
+      author: "Bonga na Jacinta Wellness Team",
+      role: "Wellness Practice",
+      avatar: "/images/projects/bonganajacinta.png",
+    },
+    timeline: "4 weeks",
+    industry: "Health & Wellness",
+    services: ["Website Development", "UX Design", "Content Structure", "Appointment Enquiries"],
+    gallery: ["/images/projects/bonganajacinta.png", "/images/projects/bonganajacinta.png", "/images/projects/bonganajacinta.png"],
+    projectUrl: "https://bonganajacintawellness.com",
+  },
+  {
+    slug: "calvoice-academy",
+    title: "Calvoice Academy",
+    category: "Education Website",
+    image: "/images/projects/calvoice academy.png",
+    heroImage: "/images/projects/calvoice academy.png",
+    description: "A bold academy website designed to showcase communication training courses and encourage learners to join with confidence.",
+    challenge: "Calvoice Academy needed a modern website that clearly presented its public-speaking and communication-focused learning opportunities while creating an engaging first impression for prospective learners.",
+    solution: "We created a high-impact academy website with clear course navigation, an approachable content structure, and strong calls to action that guide visitors from discovering the academy to joining its programmes.",
+    results: ["Presented academy programmes in a clear, engaging format", "Created a strong digital first impression for prospective learners", "Made course discovery and enquiries more straightforward", "Delivered a responsive website for desktop and mobile visitors"],
+    testimonial: {
+      quote: "The new platform gives our academy a confident, professional space to connect with learners and share our programmes.",
+      author: "Calvoice Academy Team",
+      role: "Education & Training",
+      avatar: "/images/projects/calvoice academy.png",
+    },
+    timeline: "4 weeks",
+    industry: "Education & Training",
+    services: ["Website Development", "Course Structure", "UX Design", "Responsive Development"],
+    gallery: ["/images/projects/calvoice academy.png", "/images/projects/calvoice academy.png", "/images/projects/calvoice academy.png"],
+    projectUrl: "https://calvoiceacademy.co.ke/",
+  },
   {
     slug: "aemncs",
     title: "AEMNCS",
@@ -38,7 +92,7 @@ export const projects: Project[] = [
       role: "Digital Transformation Team",
       avatar: "/images/projects/aem.png",
     },
-    timeline: "16 weeks",
+    timeline: "4 weeks",
     industry: "Non-Profit / Association",
     services: ["Website Development", "Events Portal", "Resource Library", "Projects Showcase"],
     gallery: [
@@ -64,7 +118,7 @@ export const projects: Project[] = [
       role: "Creative Director, Dira kreatives",
       avatar: "/images/projects/dirak.png",
     },
-    timeline: "8 weeks",
+    timeline: "4 weeks",
     industry: "Entertainment / Creative Arts",
     services: ["Portfolio Development", "Creative Direction", "Media Integration", "Booking System"],
     gallery: [
@@ -90,7 +144,7 @@ export const projects: Project[] = [
       role: "Head Chef & Founder, Exquisite Bites",
       avatar: "/images/projects/exquisite.png",
     },
-    timeline: "8 weeks",
+    timeline: "4 weeks",
     industry: "Food & Hospitality",
     services: ["Website Development", "Event Portfolio", "Menu Showcase", "Inquiry Management"],
     gallery: [
@@ -116,7 +170,7 @@ export const projects: Project[] = [
       role: "Executive Director, Jejo Foundation",
       avatar: "/images/projects/jejo.png",
     },
-    timeline: "20 weeks",
+    timeline: "4 weeks",
     industry: "Non-Profit / Peacebuilding",
     services: ["Peacekeeping Initiatives", "Community Development", "Cross-border Cooperation", "Impact Tracking"],
     gallery: [
@@ -142,7 +196,7 @@ export const projects: Project[] = [
       role: "Executive Director, Jukwaa la Demokrasia",
       avatar: "/images/projects/jukwaa.png",
     },
-    timeline: "20 weeks",
+    timeline: "4 weeks",
     industry: "Non-Profit / Civic Education",
     services: ["Civic Education Portal", "Leadership Training", "Voter Education", "Community Engagement"],
     gallery: [
@@ -168,7 +222,7 @@ export const projects: Project[] = [
       role: "Corporate Leader & Actor, Corporate MC",
       avatar: "/images/projects/mcdon.png",
     },
-    timeline: "8 weeks",
+    timeline: "4 weeks",
     industry: "Entertainment / Corporate",
     services: ["Portfolio Development", "Brand Identity", "Media Integration", "Content Management"],
     gallery: [
@@ -194,7 +248,7 @@ export const projects: Project[] = [
       role: "Twiddle Pips Junior School",
       avatar: "/images/projects/twiddle.png",
     },
-    timeline: "8 weeks",
+    timeline: "4 weeks",
     industry: "Education",
     services: ["Website Development", "School Portal", "Admission Management", "Community Engagement"],
     gallery: [
@@ -206,7 +260,30 @@ export const projects: Project[] = [
   },
 ];
 
+const imageSources: Record<string, string> = {
+  "/images/projects/calvoice academy.png": calvoiceAcademy.src,
+  "/images/projects/bonganajacinta.png": bongaNaJacinta.src,
+  "/images/projects/twiddle.png": twiddle.src,
+  "/images/projects/mcdon.png": mcdon.src,
+  "/images/projects/jukwaa.png": jukwaa.src,
+  "/images/projects/jejo.png": jejo.src,
+  "/images/projects/exquisite.png": exquisite.src,
+  "/images/projects/dirak.png": dirak.src,
+  "/images/projects/aem.png": aem.src,
+};
+
+const resolveImage = (path: string): string => imageSources[path] ?? path;
+
+export const projects: Project[] = rawProjects.map((project) => ({
+  ...project,
+  image: resolveImage(project.image),
+  heroImage: resolveImage(project.heroImage),
+  testimonial: project.testimonial
+    ? { ...project.testimonial, avatar: resolveImage(project.testimonial.avatar) }
+    : undefined,
+  gallery: project.gallery.map(resolveImage),
+}));
+
 export const getProjectBySlug = (slug: string): Project | undefined => {
   return projects.find((p) => p.slug === slug);
 };
-

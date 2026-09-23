@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Menu, X, Settings } from "lucide-react";
+import { Menu, X, Settings, Code2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 
 const navLinks = [
   { name: "Home", path: "/" },
   { name: "Services", path: "/services" },
+  { name: "Courses", path: "/courses/website-development", hasDropdown: true },
   { name: "Portfolio", path: "/portfolio" },
   { name: "About", path: "/about" },
   { name: "Blog", path: "/blog" },
@@ -48,7 +49,24 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-8">
-            {navLinks.map((link) => (
+            {navLinks.map((link) => link.hasDropdown ? (
+              <div key={link.path} className="group relative">
+                <Link
+                  href={link.path}
+                  className={`text-sm font-medium transition-colors duration-200 link-underline ${
+                    pathname.startsWith("/courses") ? "text-accent" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+                <div className="invisible absolute left-1/2 top-full z-50 mt-0 w-60 -translate-x-1/2 translate-y-1 rounded-xl border border-border bg-card p-2 opacity-0 shadow-medium transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                  <Link href="/courses/website-development" className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-foreground transition-colors hover:bg-secondary hover:text-accent">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-md bg-accent/10 text-accent"><Code2 className="h-4 w-4" /></span>
+                    <span>Website Development</span>
+                  </Link>
+                </div>
+              </div>
+            ) : (
               <Link
                 key={link.path}
                 href={link.path}
@@ -76,7 +94,7 @@ const Navbar = () => {
               <Link href="/contact">Start Your Project</Link>
             </Button>
             <Button variant="coral-outline" asChild>
-              <Link href="/donate">Donate</Link>
+              <Link href="/pay">Pay Invoice</Link>
             </Button>
           </div>
 
@@ -94,16 +112,17 @@ const Navbar = () => {
       {isOpen && (
         <div className="lg:hidden glass border-t border-border animate-fade-in">
           <div className="container-tight py-6 space-y-4">
-            {navLinks.map((link) => (
+            {navLinks.map((link) => link.hasDropdown ? (
+              <div key={link.path} className="space-y-2">
+                <Link href={link.path} onClick={() => setIsOpen(false)} className={`block text-base font-medium transition-colors ${pathname.startsWith("/courses") ? "text-accent" : "text-muted-foreground"}`}>{link.name}</Link>
+                <Link href="/courses/website-development" onClick={() => setIsOpen(false)} className="ml-3 flex items-center gap-2 border-l border-accent/30 pl-3 text-sm font-medium text-muted-foreground hover:text-accent"><Code2 className="h-4 w-4" /> Website Development</Link>
+              </div>
+            ) : (
               <Link
                 key={link.path}
                 href={link.path}
                 onClick={() => setIsOpen(false)}
-                className={`block text-base font-medium transition-colors ${
-                  pathname === link.path
-                    ? "text-accent"
-                    : "text-muted-foreground"
-                }`}
+                className={`block text-base font-medium transition-colors ${pathname === link.path ? "text-accent" : "text-muted-foreground"}`}
               >
                 {link.name}
               </Link>
@@ -123,8 +142,8 @@ const Navbar = () => {
               </Link>
             </Button>
             <Button variant="coral-outline" className="w-full mt-2" asChild>
-              <Link href="/donate" onClick={() => setIsOpen(false)}>
-                Donate
+              <Link href="/pay" onClick={() => setIsOpen(false)}>
+                Pay Invoice
               </Link>
             </Button>
           </div>

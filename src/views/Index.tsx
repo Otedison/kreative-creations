@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import heroBg from "@/assets/hero-bg.jpg";
-import DecorativeShapes from "@/components/DecorativeShapes";
 import PartnersCarousel from "@/components/PartnersCarousel";
 import { staticBlogPosts } from "@/data/blogs";
 import SEOHead from "@/components/SEOHead";
@@ -60,13 +59,11 @@ const testimonials = [
     quote: "Kreative Creations transformed our outdated website into a modern, high-performing digital asset. Our leads have tripled since launch.",
     author: "Sarah Chen",
     role: "CEO, TechFlow",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop",
   },
   {
     quote: "The attention to detail and strategic thinking they bring to every project is unmatched. True digital partners.",
     author: "Michael Roberts",
     role: "Founder, Luxe Fashion",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop",
   },
 ];
 
@@ -136,13 +133,6 @@ const Index = () => {
               </Button>
             </div>
           </div>
-          
-          {/* Scroll Indicator */}
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-float">
-            <div className="w-8 h-12 rounded-full border-2 border-primary-foreground/30 flex items-start justify-center p-2">
-              <div className="w-1.5 h-3 bg-coral rounded-full animate-bounce" />
-            </div>
-          </div>
         </div>
       </section>
 
@@ -155,8 +145,7 @@ const Index = () => {
       </section>
 
       {/* Value Proposition */}
-      <section className="relative section-padding bg-background overflow-hidden">
-        <DecorativeShapes variant="section" />
+      <section className="section-padding bg-background">
         <div className="container-tight relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div>
@@ -184,9 +173,8 @@ const Index = () => {
               </ul>
             </div>
             
-            <div className="relative">
-              <div className="absolute -inset-4 bg-gradient-coral opacity-10 blur-3xl rounded-3xl" />
-              <div className="relative grid grid-cols-2 gap-4">
+            <div>
+              <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-4">
                   <div className="bg-card rounded-2xl p-6 shadow-soft hover-lift">
                     <span className="text-4xl font-bold text-gradient">150+</span>
@@ -262,8 +250,7 @@ const Index = () => {
       </section>
 
       {/* Portfolio */}
-      <section className="relative section-padding bg-background overflow-hidden">
-        <DecorativeShapes variant="dots" />
+      <section className="section-padding bg-background">
         <div className="container-tight relative z-10">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
             <div>
@@ -321,8 +308,7 @@ const Index = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="relative section-padding bg-slate-dark text-primary-foreground overflow-hidden">
-        <DecorativeShapes variant="circles" />
+      <section className="section-padding bg-slate-dark text-primary-foreground">
         <div className="container-tight relative z-10">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <span className="text-coral font-semibold text-sm uppercase tracking-wider">Testimonials</span>
@@ -340,16 +326,9 @@ const Index = () => {
                 <p className="text-lg text-primary-foreground/90 leading-relaxed mb-6">
                   "{testimonial.quote}"
                 </p>
-                <div className="flex items-center gap-4">
-                  <img
-                    src={testimonial.avatar}
-                    alt={testimonial.author}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                  <div>
-                    <p className="font-semibold">{testimonial.author}</p>
-                    <p className="text-primary-foreground/60 text-sm">{testimonial.role}</p>
-                  </div>
+                <div>
+                  <p className="font-semibold">{testimonial.author}</p>
+                  <p className="text-primary-foreground/60 text-sm">{testimonial.role}</p>
                 </div>
               </div>
             ))}
@@ -358,8 +337,7 @@ const Index = () => {
       </section>
 
       {/* The Modern Roadmap: Expert Tips for Digital Growth */}
-      <section className="relative section-padding bg-background overflow-hidden">
-        <DecorativeShapes variant="section" />
+      <section className="section-padding bg-background">
         <div className="container-tight relative z-10">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <span className="text-coral font-semibold text-sm uppercase tracking-wider">Latest Insights</span>
@@ -434,9 +412,6 @@ const Index = () => {
       <section className="section-padding bg-background">
         <div className="container-tight">
           <div className="relative overflow-hidden rounded-3xl bg-gradient-hero p-12 md:p-16 lg:p-20">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-coral/20 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-coral/10 rounded-full blur-3xl" />
-            
             <div className="relative z-10 max-w-2xl">
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary-foreground mb-6">
                 Ready to Build Your Digital Home?

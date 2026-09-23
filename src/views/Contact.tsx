@@ -1,28 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { Mail, Phone, MapPin, Send, Calendar, CheckCircle2 } from "lucide-react";
+import { Mail, Phone, MapPin, Send, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import SEOHead from "@/components/SEOHead";
-
-const services = [
-  "Website Development",
-  "E-commerce",
-  "UI/UX Design",
-  "SEO Optimization",
-  "Brand Strategy",
-  "Content Marketing",
-];
-
-const budgetRanges = [
-  "Under KSh 40,000",
-  "KSh 40,000 - KSh 80,000",
-  "KSh 80,000 - KSh 100,000",
-  "KSh 100,000+",
-];
+import { contactFormAction, googleSheetsWebhookUrl, submitToGoogleSheets } from "@/lib/formEndpoints";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -30,25 +15,27 @@ const Contact = () => {
     email: "",
     phoneNumber: "",
     company: "",
-    services: [] as string[],
-    budget: "",
     message: "",
     consent: false,
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const servicesText = useMemo(() => formData.services.join(", "), [formData.services]);
   const nextUrl =
     typeof window !== "undefined"
       ? `${window.location.origin}/contact?success=true`
       : "/contact?success=true";
 
-  const handleServiceToggle = (service: string) => {
-    setFormData(prev => ({
-      ...prev,
-      services: prev.services.includes(service)
-        ? prev.services.filter(s => s !== service)
-        : [...prev.services, service]
-    }));
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    if (!googleSheetsWebhookUrl) return;
+
+    event.preventDefault();
+    setIsSubmitting(true);
+    try {
+      await submitToGoogleSheets(event.currentTarget);
+      window.location.assign(nextUrl);
+    } catch {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -75,22 +62,32 @@ const Contact = () => {
       </section>
 
       {/* Contact Form & Info */}
-      <section className="section-padding bg-background">
+      <section className="section-padding bg-secondary">
         <div className="container-tight">
-          <div className="grid lg:grid-cols-3 gap-12">
+          <div className="mb-12 max-w-2xl">
+            <span className="text-coral font-semibold text-sm uppercase tracking-wider">Start the conversation</span>
+            <h2 className="mt-4 text-3xl font-bold md:text-4xl">Bring us the challenge. We&apos;ll help shape the next step.</h2>
+            <p className="mt-4 text-lg leading-relaxed text-muted-foreground">Share a little about your goals, and our team will respond with practical recommendations for your project.</p>
+          </div>
+
+          <div className="grid items-start gap-8 lg:grid-cols-[1.35fr_.65fr] lg:gap-12">
             {/* Form */}
-            <div className="lg:col-span-2">
+            <div className="rounded-3xl border border-border bg-card p-6 shadow-soft md:p-10">
+              <div className="mb-8 border-b border-border pb-6">
+                <h3 className="text-2xl font-bold">Tell us about your project</h3>
+                <p className="mt-2 text-sm text-muted-foreground">The more context you share, the more useful our first reply can be.</p>
+              </div>
               <form
-                action="https://formsubmit.co/d5f27201196224a39e1c37a29561b232"
+                action={contactFormAction}
                 method="POST"
-                className="space-y-8"
+                onSubmit={handleSubmit}
+                className="space-y-7"
               >
+                <input type="hidden" name="formType" value="contact" />
                 <input type="hidden" name="_subject" value="New Contact Form Submission - Kreative Creations" />
                 <input type="hidden" name="_replyto" value={formData.email} />
                 <input type="hidden" name="_next" value={nextUrl} />
                 <input type="hidden" name="_template" value="table" />
-                <input type="hidden" name="services" value={servicesText} />
-                <input type="hidden" name="budget" value={formData.budget} />
                 <input type="hidden" name="consent" value={formData.consent ? "Yes" : "No"} />
 
                 <div className="grid md:grid-cols-2 gap-6">
@@ -143,49 +140,6 @@ const Contact = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-4">Services You're Interested In</label>
-                  <div className="flex flex-wrap gap-2">
-                    {services.map((service) => (
-                      <button
-                        key={service}
-                        type="button"
-                        onClick={() => handleServiceToggle(service)}
-                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                          formData.services.includes(service)
-                            ? "bg-coral text-accent-foreground"
-                            : "bg-secondary text-muted-foreground hover:text-foreground"
-                        }`}
-                      >
-                        {formData.services.includes(service) && (
-                          <CheckCircle2 className="w-4 h-4 inline mr-1" />
-                        )}
-                        {service}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-4">Project Budget</label>
-                  <div className="flex flex-wrap gap-2">
-                    {budgetRanges.map((budget) => (
-                      <button
-                        key={budget}
-                        type="button"
-                        onClick={() => setFormData({ ...formData, budget })}
-                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                          formData.budget === budget
-                            ? "bg-coral text-accent-foreground"
-                            : "bg-secondary text-muted-foreground hover:text-foreground"
-                        }`}
-                      >
-                        {budget}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
                   <label className="block text-sm font-medium mb-2">Tell Us About Your Project *</label>
                   <Textarea
                     required
@@ -218,47 +172,50 @@ const Contact = () => {
                   variant="coral" 
                   size="xl" 
                   className="w-full md:w-auto"
+                  disabled={isSubmitting}
                 >
-                  Send Message
+                  {isSubmitting ? "Sending..." : "Send Message"}
                   <Send className="w-5 h-5 ml-2" />
                 </Button>
               </form>
             </div>
 
             {/* Contact Info */}
-            <div className="space-y-8">
-              <div className="bg-secondary rounded-2xl p-8">
-                <h3 className="text-xl font-bold mb-6">Contact Information</h3>
-                <ul className="space-y-6">
+            <div className="space-y-6">
+              <div className="rounded-3xl bg-slate-dark p-8 text-primary-foreground shadow-medium">
+                <span className="text-sm font-semibold uppercase tracking-wider text-green-400">Reach us directly</span>
+                <h3 className="mt-3 text-2xl font-bold">A real team is ready to listen.</h3>
+                <p className="mt-3 leading-relaxed text-primary-foreground/70">Have a quick question or prefer a direct conversation? Use any of the channels below.</p>
+                <ul className="mt-8 space-y-6">
                   <li className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-coral/20 flex items-center justify-center flex-shrink-0">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-coral/20">
                       <Mail className="w-5 h-5 text-coral" />
                     </div>
                     <div>
                       <p className="font-medium">Email</p>
-                      <a href="mailto:hello@kreativecreations.co.ke" className="text-muted-foreground hover:text-coral transition-colors">
+                      <a href="mailto:hello@kreativecreations.co.ke" className="text-primary-foreground/70 transition-colors hover:text-coral">
                         hello@kreativecreations.co.ke
                       </a>
                     </div>
                   </li>
                   <li className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-coral/20 flex items-center justify-center flex-shrink-0">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-coral/20">
                       <Phone className="w-5 h-5 text-coral" />
                     </div>
                     <div>
                       <p className="font-medium">Phone</p>
-                      <a href="tel:+254743653115" className="text-muted-foreground hover:text-coral transition-colors">
+                      <a href="tel:+254743653115" className="text-primary-foreground/70 transition-colors hover:text-coral">
                         +2547 43 653 115
                       </a>
                     </div>
                   </li>
                   <li className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-coral/20 flex items-center justify-center flex-shrink-0">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-coral/20">
                       <MapPin className="w-5 h-5 text-coral" />
                     </div>
                     <div>
                       <p className="font-medium">Location</p>
-                      <p className="text-muted-foreground">
+                      <p className="text-primary-foreground/70">
                         Kahawa Sukari, Thika Road<br />
                         Nairobi, Kenya
                       </p>
@@ -267,15 +224,15 @@ const Contact = () => {
                 </ul>
               </div>
 
-              <div className="bg-gradient-hero text-primary-foreground rounded-2xl p-8">
+              <div className="rounded-3xl border border-border bg-card p-8 shadow-soft">
                 <div className="w-12 h-12 rounded-xl bg-primary-foreground/10 flex items-center justify-center mb-6">
-                  <Calendar className="w-6 h-6" />
+                  <Calendar className="w-6 h-6 text-coral" />
                 </div>
-                <h3 className="text-xl font-bold mb-4">Schedule a Call</h3>
-                <p className="text-primary-foreground/80 mb-6">
+                <h3 className="text-xl font-bold mb-4">Prefer a conversation?</h3>
+                <p className="text-muted-foreground mb-6">
                   Prefer to talk? Book a free 30-minute strategy call with our team.
                 </p>
-                <Button variant="hero" className="w-full">
+                <Button variant="coral-outline" className="w-full">
                   Book a Call
                 </Button>
               </div>
@@ -285,13 +242,15 @@ const Contact = () => {
       </section>
 
       {/* FAQ */}
-      <section className="section-padding bg-secondary">
+      <section className="section-padding bg-background">
         <div className="container-tight">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <h2 className="text-3xl font-bold">Frequently Asked Questions</h2>
+          <div className="mb-12 max-w-2xl">
+            <span className="text-coral font-semibold text-sm uppercase tracking-wider">Before we begin</span>
+            <h2 className="mt-4 text-3xl font-bold md:text-4xl">Frequently Asked Questions</h2>
+            <p className="mt-4 text-muted-foreground">A few useful details about how we work together.</p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <div className="grid max-w-5xl gap-5 md:grid-cols-2">
             {[
               {
                 q: "What's your typical project timeline?",
@@ -310,9 +269,9 @@ const Contact = () => {
                 a: "We use Slack for real-time communication, weekly video calls for updates, and project management tools to keep everything organized.",
               },
             ].map((faq) => (
-              <div key={faq.q} className="bg-card rounded-2xl p-6 shadow-soft">
-                <h4 className="font-bold mb-2">{faq.q}</h4>
-                <p className="text-muted-foreground text-sm">{faq.a}</p>
+              <div key={faq.q} className="rounded-2xl border border-border bg-card p-6 transition-shadow hover:shadow-soft">
+                <h4 className="font-bold">{faq.q}</h4>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{faq.a}</p>
               </div>
             ))}
           </div>
