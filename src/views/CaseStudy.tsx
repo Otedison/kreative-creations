@@ -6,299 +6,268 @@ import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, Clock, Briefcase, Layers, CheckCircle2, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getProjectBySlug, projects } from "@/data/projects";
-import DecorativeShapes from "@/components/DecorativeShapes";
 import SEOHead from "@/components/SEOHead";
+import caseStudyHero from "@/assets/hero-bg.jpg";
 
 const CaseStudy = () => {
   const params = useParams();
   const router = useRouter();
-  const slug = typeof params?.slug === "string" ? params.slug : Array.isArray(params?.slug) ? params.slug[0] : undefined;
+  const slug =
+    typeof params?.slug === "string"
+      ? params.slug
+      : Array.isArray(params?.slug)
+        ? params.slug[0]
+        : undefined;
   const project = slug ? getProjectBySlug(slug) : undefined;
 
   useEffect(() => {
-    if (!project) {
-      router.replace("/portfolio");
-    }
+    if (!project) router.replace("/portfolio");
   }, [project, router]);
 
-  if (!project) {
-    return null;
-  }
+  if (!project) return null;
 
-  const currentIndex = projects.findIndex((p) => p.slug === slug);
-  const prevProject = currentIndex > 0 ? projects[currentIndex - 1] : null;
+  const currentIndex = projects.findIndex((item) => item.slug === slug);
+  const previousProject = currentIndex > 0 ? projects[currentIndex - 1] : null;
   const nextProject = currentIndex < projects.length - 1 ? projects[currentIndex + 1] : null;
 
   return (
     <>
       <SEOHead
         title={`${project.title} - Case Study | Kreative Creations`}
-        description={project.description || `Learn how we helped ${project.title} achieve their digital goals. View our case study showcasing our ${project.category} expertise.`}
+        description={project.description}
         url={`/case-study/${project.slug}`}
         image={project.image}
         type="article"
       />
-      <main className="pt-20">
-        {/* Hero */}
-      <section className="relative min-h-[60vh] flex items-end">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${project.heroImage})` }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-dark via-slate-dark/70 to-transparent" />
-        </div>
-        <DecorativeShapes variant="hero" />
-        
-        <div className="relative z-10 container-tight pb-16">
-          <Link
-            href="/portfolio"
-            className="inline-flex items-center gap-2 text-primary-foreground/70 hover:text-primary-foreground mb-6 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Portfolio
-          </Link>
-          
-          <span className="text-coral font-semibold text-sm uppercase tracking-wider">
-            {project.category}
-          </span>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mt-2 mb-4">
-            {project.title}
-          </h1>
-          <p className="text-xl text-primary-foreground/80 max-w-2xl">
-            {project.description}
-          </p>
-        </div>
-      </section>
-
-      {/* Project Info Bar */}
-      <section className="py-8 bg-card border-b border-border">
-        <div className="container-tight">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-coral/10 flex items-center justify-center">
-                <Clock className="w-5 h-5 text-coral" />
+      <main className="overflow-hidden">
+        <section className="relative isolate min-h-[465px] overflow-hidden bg-slate-dark text-primary-foreground md:min-h-[465px]">
+          <img
+            src={caseStudyHero.src}
+            alt="Creative digital project workspace"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-slate-dark/80" />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-dark via-slate-dark/75 to-slate-dark/20" />
+          <div className="container-tight relative flex min-h-[465px] items-center">
+            <div className="max-w-3xl py-12">
+              <Link
+                href="/portfolio"
+                className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-primary-foreground/70 transition-colors hover:text-coral"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back to portfolio
+              </Link>
+              <div className="flex items-center gap-3">
+                <span className="h-px w-8 bg-coral" />
+                <span className="text-coral text-sm font-semibold uppercase tracking-[0.2em]">
+                  {project.category}
+                </span>
               </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Timeline</p>
-                <p className="font-semibold">{project.timeline}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-green/10 flex items-center justify-center">
-                <Briefcase className="w-5 h-5 text-green" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Industry</p>
-                <p className="font-semibold">{project.industry}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 col-span-2">
-              <div className="w-10 h-10 rounded-lg bg-coral/10 flex items-center justify-center">
-                <Layers className="w-5 h-5 text-coral" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Services</p>
-                <p className="font-semibold">{project.services.join(", ")}</p>
-              </div>
-            </div>
-            {project.projectUrl && (
-              <div className="col-span-2 md:col-span-4 flex items-center gap-3 mt-2">
-                <Button variant="outline" size="sm" asChild>
-                  <a
-                    href={project.projectUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2"
-                  >
-                    View Live Project
-                    <ExternalLink className="w-4 h-4" />
+              <h1 className="mt-4 text-4xl font-bold leading-[1.02] md:text-6xl">
+                {project.title}
+              </h1>
+              <p className="mt-5 max-w-2xl text-lg leading-relaxed text-primary-foreground/75">
+                {project.description}
+              </p>
+              {project.projectUrl && (
+                <Button variant="hero" size="xl" asChild className="mt-7">
+                  <a href={project.projectUrl} target="_blank" rel="noopener noreferrer">
+                    Visit live website
+                    <ExternalLink className="ml-2 h-5 w-5" />
                   </a>
                 </Button>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Challenge & Solution */}
-      <section className="relative section-padding bg-background">
-        <DecorativeShapes variant="dots" />
-        <div className="container-tight relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-coral/10 text-coral text-sm font-medium mb-4">
-                The Challenge
-              </div>
-              <h2 className="text-3xl font-bold mb-6">What They Were Facing</h2>
-              <p className="text-muted-foreground text-lg leading-relaxed">
-                {project.challenge}
-              </p>
-            </div>
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-green/10 text-green text-sm font-medium mb-4">
-                Our Solution
-              </div>
-              <h2 className="text-3xl font-bold mb-6">How We Solved It</h2>
-              <p className="text-muted-foreground text-lg leading-relaxed">
-                {project.solution}
-              </p>
+              )}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Results */}
-      <section className="relative section-padding bg-slate-dark text-primary-foreground overflow-hidden">
-        <DecorativeShapes variant="circles" />
-        <div className="container-tight relative z-10">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-coral font-semibold text-sm uppercase tracking-wider">
-              The Results
-            </span>
-            <h2 className="text-3xl md:text-4xl font-bold mt-4">
-              Measurable Impact
-            </h2>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {project.results.map((result, i) => (
-              <div
-                key={i}
-                className="glass-dark rounded-2xl p-6 text-center hover-lift"
-              >
-                <CheckCircle2 className="w-8 h-8 text-green mx-auto mb-4" />
-                <p className="text-lg font-semibold">{result}</p>
+        <section className="relative z-10 bg-background">
+          <div className="container-tight">
+            <div className="-mt-8 grid overflow-hidden border border-border bg-card shadow-medium md:grid-cols-3">
+              <div className="flex items-center gap-4 px-6 py-5 md:border-r md:border-border">
+                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center bg-coral/10 text-coral">
+                  <Clock className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground">Timeline</p>
+                  <p className="mt-1 font-bold">{project.timeline}</p>
+                </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Gallery */}
-      <section className="relative section-padding bg-secondary overflow-hidden">
-        <DecorativeShapes variant="section" />
-        <div className="container-tight relative z-10">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-coral font-semibold text-sm uppercase tracking-wider">
-              Project Gallery
-            </span>
-            <h2 className="text-3xl md:text-4xl font-bold mt-4">
-              Visual Highlights
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {project.gallery.map((image, i) => (
-              <div
-                key={i}
-                className="relative aspect-[4/3] rounded-2xl overflow-hidden hover-lift"
-              >
-                <img
-                  src={image}
-                  alt={`${project.title} gallery ${i + 1}`}
-                  className="w-full h-full object-cover"
-                />
+              <div className="flex items-center gap-4 border-t border-border px-6 py-5 md:border-r md:border-t-0 md:border-border">
+                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center bg-slate-dark/10 text-slate-dark">
+                  <Briefcase className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground">Industry</p>
+                  <p className="mt-1 font-bold">{project.industry}</p>
+                </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonial */}
-      {project.testimonial && (
-        <section className="relative section-padding bg-gradient-hero text-primary-foreground overflow-hidden">
-          <DecorativeShapes variant="hero" />
-          <div className="container-tight relative z-10">
-            <div className="max-w-4xl mx-auto text-center">
-              <svg
-                className="w-12 h-12 text-coral mx-auto mb-8 opacity-50"
-                fill="currentColor"
-                viewBox="0 0 32 32"
-              >
-                <path d="M10 8c-3.3 0-6 2.7-6 6v10h10V14H6c0-2.2 1.8-4 4-4V8zm14 0c-3.3 0-6 2.7-6 6v10h10V14h-8c0-2.2 1.8-4 4-4V8z" />
-              </svg>
-              <p className="text-2xl md:text-3xl font-medium leading-relaxed mb-8">
-                "{project.testimonial.quote}"
-              </p>
-              <div className="flex items-center justify-center gap-4">
-                <img
-                  src={project.testimonial.avatar}
-                  alt={project.testimonial.author}
-                  className="w-14 h-14 rounded-full object-cover"
-                />
-                <div className="text-left">
-                  <p className="font-semibold">{project.testimonial.author}</p>
-                  <p className="text-primary-foreground/60">
-                    {project.testimonial.role}
-                  </p>
+              <div className="flex items-center gap-4 border-t border-border px-6 py-5 md:border-t-0">
+                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center bg-coral/10 text-coral">
+                  <Layers className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground">Speciality</p>
+                  <p className="mt-1 line-clamp-2 text-sm font-bold">{project.category}</p>
                 </div>
               </div>
             </div>
           </div>
         </section>
-      )}
 
-      {/* Navigation */}
-      <section className="py-12 bg-card border-t border-border">
-        <div className="container-tight">
-          <div className="flex justify-between items-center">
-            {prevProject ? (
+        <section className="section-padding bg-background">
+          <div className="container-tight">
+            <div className="grid gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:gap-20">
+              <div>
+                <p className="text-coral text-sm font-semibold uppercase tracking-[0.18em]">The brief</p>
+                <h2 className="mt-4 text-3xl font-bold md:text-5xl">Understanding the challenge</h2>
+              </div>
+              <div className="border-l-2 border-coral pl-7 md:pl-10">
+                <p className="text-xl leading-[1.75] text-muted-foreground md:text-2xl">{project.challenge}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-secondary py-16 md:py-24">
+          <div className="container-tight grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
+            <div className="border-[3px] border-slate-dark bg-card">
+              <img
+                src={project.image}
+                alt={`${project.title} website`}
+                className="aspect-[16/10] h-full w-full object-cover"
+              />
+            </div>
+            <div>
+              <p className="text-coral text-sm font-semibold uppercase tracking-[0.18em]">Our approach</p>
+              <h2 className="mt-4 text-3xl font-bold md:text-5xl">A solution made for the audience</h2>
+              <p className="mt-6 text-lg leading-[1.85] text-muted-foreground">{project.solution}</p>
+              <div className="mt-8 flex flex-wrap gap-2">
+                {project.services.map((service) => (
+                  <span key={service} className="border border-border bg-card px-3 py-2 text-xs font-semibold">
+                    {service}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="section-padding bg-background">
+          <div className="container-tight">
+            <div className="mb-12 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p className="text-coral text-sm font-semibold uppercase tracking-[0.18em]">What changed</p>
+                <h2 className="mt-4 text-3xl font-bold md:text-5xl">Project outcomes</h2>
+              </div>
+              <p className="max-w-md text-muted-foreground">
+                Improvements delivered around usability, visibility and the next customer action.
+              </p>
+            </div>
+            <div className="grid border-l border-t border-border md:grid-cols-2">
+              {project.results.map((result, index) => (
+                <div key={result} className="flex min-h-[180px] gap-5 border-b border-r border-border p-7 md:p-9">
+                  <span className="text-4xl font-bold text-coral/25">0{index + 1}</span>
+                  <div>
+                    <CheckCircle2 className="mb-5 h-6 w-6 text-coral" />
+                    <p className="text-lg font-semibold leading-relaxed">{result}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {project.gallery.length > 0 && (
+          <section className="section-padding bg-slate-dark text-primary-foreground">
+            <div className="container-tight">
+              <div className="mb-10">
+                <p className="text-coral text-sm font-semibold uppercase tracking-[0.18em]">Visual details</p>
+                <h2 className="mt-4 text-3xl font-bold md:text-5xl">The project in focus</h2>
+              </div>
+              <div className="grid gap-5 md:grid-cols-12">
+                {project.gallery.map((image, index) => (
+                  <div
+                    key={`${image}-${index}`}
+                    className={`overflow-hidden border-[3px] border-slate-dark bg-card ${
+                      index === 0 ? "md:col-span-7" : "md:col-span-5"
+                    }`}
+                  >
+                    <img
+                      src={image}
+                      alt={`${project.title} view ${index + 1}`}
+                      className="aspect-[16/10] h-full w-full object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {project.testimonial && (
+          <section className="section-padding bg-card">
+            <div className="container-tight">
+              <div className="mx-auto max-w-4xl text-center">
+                <span className="text-coral text-sm font-semibold uppercase tracking-[0.18em]">Client perspective</span>
+                <blockquote className="mt-6 text-2xl font-medium leading-relaxed md:text-4xl">
+                  &ldquo;{project.testimonial.quote}&rdquo;
+                </blockquote>
+                <div className="mt-8">
+                  <p className="font-bold">{project.testimonial.author}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">{project.testimonial.role}</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        <section className="border-t border-border bg-background">
+          <div className="container-tight grid md:grid-cols-2">
+            {previousProject ? (
               <Link
-                href={`/case-study/${prevProject.slug}`}
-                className="group flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors"
+                href={`/case-study/${previousProject.slug}`}
+                className="group flex items-center gap-5 border-b border-border py-9 md:border-b-0 md:border-r md:pr-8"
               >
-                <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                <ArrowLeft className="h-5 w-5 text-coral transition-transform group-hover:-translate-x-1" />
                 <div>
-                  <p className="text-sm">Previous</p>
-                  <p className="font-semibold text-foreground">
-                    {prevProject.title}
-                  </p>
+                  <span className="text-xs uppercase tracking-wider text-muted-foreground">Previous project</span>
+                  <p className="mt-1 font-bold">{previousProject.title}</p>
                 </div>
               </Link>
             ) : (
               <div />
             )}
-
             {nextProject ? (
               <Link
                 href={`/case-study/${nextProject.slug}`}
-                className="group flex items-center gap-3 text-muted-foreground hover:text-foreground transition-colors text-right"
+                className="group flex items-center justify-end gap-5 py-9 text-right md:pl-8"
               >
                 <div>
-                  <p className="text-sm">Next</p>
-                  <p className="font-semibold text-foreground">
-                    {nextProject.title}
-                  </p>
+                  <span className="text-xs uppercase tracking-wider text-muted-foreground">Next project</span>
+                  <p className="mt-1 font-bold">{nextProject.title}</p>
                 </div>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="h-5 w-5 text-coral transition-transform group-hover:translate-x-1" />
               </Link>
             ) : (
               <div />
             )}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* CTA */}
-      <section className="relative section-padding bg-secondary overflow-hidden">
-        <DecorativeShapes variant="section" />
-        <div className="container-tight text-center relative z-10">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Want Similar Results?
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-            Let's discuss how we can help transform your digital presence and
-            achieve your business goals.
-          </p>
-          <Button variant="coral" size="xl" asChild>
-            <Link href="/contact">
-              Start Your Project
-              <ArrowRight className="w-5 h-5 ml-1" />
-            </Link>
-          </Button>
-        </div>
-      </section>
-    </main>
+        <section className="section-padding bg-secondary">
+          <div className="container-tight text-center">
+            <p className="text-coral text-sm font-semibold uppercase tracking-[0.18em]">Plan your website</p>
+            <h2 className="mx-auto mt-4 max-w-3xl text-3xl font-bold md:text-5xl">Let&apos;s turn your goals into a better digital experience.</h2>
+            <Button variant="dark" size="xl" asChild className="mt-8">
+              <Link href="/contact">
+                Reach Us
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+          </div>
+        </section>
+      </main>
     </>
   );
 };

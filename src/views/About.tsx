@@ -75,7 +75,7 @@ const About = () => {
       />
       <main className="overflow-hidden">
       {/* Hero */}
-      <section className="section-padding bg-slate-dark text-primary-foreground">
+      <section className="py-16 md:py-20 lg:py-24 bg-slate-dark text-primary-foreground">
         <div className="container-tight">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>

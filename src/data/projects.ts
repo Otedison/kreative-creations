@@ -7,6 +7,18 @@ import jejo from "@/images/projects/jejo.png";
 import exquisite from "@/images/projects/exquisite.png";
 import dirak from "@/images/projects/dirak.png";
 import aem from "@/images/projects/aem.png";
+import bnjw1 from "@/images/projects/bnjw/bnjw.png";
+import bnjw2 from "@/images/projects/bnjw/bnjw2.png";
+import bnjw3 from "@/images/projects/bnjw/bnjw3.png";
+import jejo1 from "@/images/projects/jejo/jejo1.png";
+import jejo2 from "@/images/projects/jejo/jejo2.png";
+import jejo3 from "@/images/projects/jejo/jejo3.png";
+import mcdon1 from "@/images/projects/mcdon/don1.png";
+import mcdon2 from "@/images/projects/mcdon/don2.png";
+import mcdon3 from "@/images/projects/mcdon/don3.png";
+import twiddle1 from "@/images/projects/twiddle/t1.png";
+import twiddle2 from "@/images/projects/twiddle/t2.png";
+import twiddle3 from "@/images/projects/twiddle/t3.png";
 
 export interface Project {
   slug: string;
@@ -51,7 +63,7 @@ const rawProjects: Project[] = [
     timeline: "4 weeks",
     industry: "Health & Wellness",
     services: ["Website Development", "UX Design", "Content Structure", "Appointment Enquiries"],
-    gallery: ["/images/projects/bonganajacinta.png", "/images/projects/bonganajacinta.png", "/images/projects/bonganajacinta.png"],
+    gallery: ["/images/projects/bnjw/bnjw.png", "/images/projects/bnjw/bnjw2.png", "/images/projects/bnjw/bnjw3.png"],
     projectUrl: "https://bonganajacintawellness.com",
   },
   {
@@ -174,9 +186,9 @@ const rawProjects: Project[] = [
     industry: "Non-Profit / Peacebuilding",
     services: ["Peacekeeping Initiatives", "Community Development", "Cross-border Cooperation", "Impact Tracking"],
     gallery: [
-      "/images/projects/jejo.png",
-      "/images/projects/jejo.png",
-      "/images/projects/jejo.png",
+      "/images/projects/jejo/jejo1.png",
+      "/images/projects/jejo/jejo2.png",
+      "/images/projects/jejo/jejo3.png",
     ],
     projectUrl: "http://jejofoundation.org",
   },
@@ -226,9 +238,9 @@ const rawProjects: Project[] = [
     industry: "Entertainment / Corporate",
     services: ["Portfolio Development", "Brand Identity", "Media Integration", "Content Management"],
     gallery: [
-      "/images/projects/mcdon.png",
-      "/images/projects/mcdon.png",
-      "/images/projects/mcdon.png",
+      "/images/projects/mcdon/don1.png",
+      "/images/projects/mcdon/don2.png",
+      "/images/projects/mcdon/don3.png",
     ],
     projectUrl: "https://mcdon.co.ke",
   },
@@ -252,9 +264,9 @@ const rawProjects: Project[] = [
     industry: "Education",
     services: ["Website Development", "School Portal", "Admission Management", "Community Engagement"],
     gallery: [
-      "/images/projects/twiddle.png",
-      "/images/projects/twiddle.png",
-      "/images/projects/twiddle.png",
+      "/images/projects/twiddle/t1.png",
+      "/images/projects/twiddle/t2.png",
+      "/images/projects/twiddle/t3.png",
     ],
     projectUrl: "https://www.twiddlepipsjuniorschool.com",
   },
@@ -270,6 +282,18 @@ const imageSources: Record<string, string> = {
   "/images/projects/exquisite.png": exquisite.src,
   "/images/projects/dirak.png": dirak.src,
   "/images/projects/aem.png": aem.src,
+  "/images/projects/bnjw/bnjw.png": bnjw1.src,
+  "/images/projects/bnjw/bnjw2.png": bnjw2.src,
+  "/images/projects/bnjw/bnjw3.png": bnjw3.src,
+  "/images/projects/jejo/jejo1.png": jejo1.src,
+  "/images/projects/jejo/jejo2.png": jejo2.src,
+  "/images/projects/jejo/jejo3.png": jejo3.src,
+  "/images/projects/mcdon/don1.png": mcdon1.src,
+  "/images/projects/mcdon/don2.png": mcdon2.src,
+  "/images/projects/mcdon/don3.png": mcdon3.src,
+  "/images/projects/twiddle/t1.png": twiddle1.src,
+  "/images/projects/twiddle/t2.png": twiddle2.src,
+  "/images/projects/twiddle/t3.png": twiddle3.src,
 };
 
 const resolveImage = (path: string): string => imageSources[path] ?? path;

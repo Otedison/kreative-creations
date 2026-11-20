@@ -111,7 +111,7 @@ const Services = () => {
       />
       <main className="overflow-hidden">
       {/* Hero */}
-      <section className="section-padding bg-slate-dark text-primary-foreground">
+      <section className="py-16 md:py-20 lg:py-24 bg-slate-dark text-primary-foreground">
         <div className="container-tight">
           <div className="max-w-3xl">
             <span className="text-coral font-semibold text-sm uppercase tracking-wider">Our Services</span>
@@ -126,7 +126,7 @@ const Services = () => {
       </section>
 
       {/* Primary Services */}
-      <section className="section-padding bg-background">
+      <section id="web-design" className="scroll-mt-32 section-padding bg-background">
         <div className="container-tight">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <span className="text-coral font-semibold text-sm uppercase tracking-wider">Core Offerings</span>
@@ -177,7 +177,7 @@ const Services = () => {
       </section>
 
       {/* Supporting Services */}
-      <section className="section-padding bg-secondary">
+      <section id="seo-google" className="scroll-mt-32 section-padding bg-secondary">
         <div className="container-tight">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <span className="text-coral font-semibold text-sm uppercase tracking-wider">Powered by Your Foundation</span>
@@ -216,7 +216,7 @@ const Services = () => {
       </section>
 
       {/* Process */}
-      <section className="section-padding bg-background">
+      <section id="website-management" className="scroll-mt-32 section-padding bg-background">
         <div className="container-tight">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <span className="text-coral font-semibold text-sm uppercase tracking-wider">Our Process</span>

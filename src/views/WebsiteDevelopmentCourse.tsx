@@ -86,7 +86,7 @@ export default function WebsiteDevelopmentCourse() {
     <>
       <SEOHead title="WordPress Website Development Training" description="Hands-on WordPress website development training from Kreative Creations." />
       <main>
-        <section className="relative overflow-hidden bg-slate-dark py-20 text-white md:py-28">
+        <section className="relative overflow-hidden bg-slate-dark py-16 text-white md:py-20 lg:py-24">
           <div className="absolute -right-24 -top-20 h-80 w-80 rounded-full bg-accent/20 blur-3xl" />
           <div className="absolute -bottom-32 left-0 h-72 w-72 rounded-full bg-coral/20 blur-3xl" />
           <div className="container-tight relative grid items-center gap-12 lg:grid-cols-[1.15fr_.85fr]">

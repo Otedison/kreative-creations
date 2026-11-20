@@ -97,7 +97,7 @@ const Donate = () => {
           url="/donate"
         />
         <main className="overflow-hidden">
-          <section className="relative section-padding bg-slate-dark min-h-screen flex items-center justify-center">
+          <section className="relative py-16 md:py-20 lg:py-24 bg-slate-dark min-h-[75vh] flex items-center justify-center">
             <DecorativeShapes variant="section" />
             <div className="container-tight relative z-10">
               <Card className="max-w-lg mx-auto text-center bg-card/80 backdrop-blur-sm">
@@ -154,7 +154,7 @@ const Donate = () => {
       />
       <main className="overflow-hidden">
         {/* Hero */}
-        <section className="relative section-padding bg-slate-dark text-primary-foreground overflow-hidden">
+        <section className="relative py-16 md:py-20 lg:py-24 bg-slate-dark text-primary-foreground overflow-hidden">
           <DecorativeShapes variant="hero" />
           <div className="container-tight relative z-10">
             <div className="max-w-3xl mx-auto text-center">
@@ -373,4 +373,3 @@ const Donate = () => {
 };
 
 export default Donate;
-

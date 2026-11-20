@@ -44,7 +44,7 @@ const Blog = () => {
       />
       <main className="overflow-hidden">
       {/* Hero */}
-      <section className="section-padding bg-slate-dark text-primary-foreground">
+      <section className="py-16 md:py-20 lg:py-24 bg-slate-dark text-primary-foreground">
         <div className="container-tight">
           <div className="max-w-3xl">
             <span className="text-coral font-semibold text-sm uppercase tracking-wider">Blog & Resources</span>
@@ -190,4 +190,3 @@ const Blog = () => {
 };
 
 export default Blog;
-

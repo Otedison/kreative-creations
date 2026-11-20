@@ -3,18 +3,22 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Menu, X, Settings, Code2 } from "lucide-react";
+import { Menu, X, Settings, Code2, ChevronDown, Palette, Search, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 
 const navLinks = [
   { name: "Home", path: "/" },
-  { name: "Services", path: "/services" },
+  { name: "Services", path: "#", hasServicesDropdown: true },
   { name: "Courses", path: "/courses/website-development", hasDropdown: true },
   { name: "Portfolio", path: "/portfolio" },
-  { name: "About", path: "/about" },
-  { name: "Blog", path: "/blog" },
-  { name: "Contact", path: "/contact" },
+  { name: "Reach Us", path: "/contact" },
+];
+
+const serviceLinks = [
+  { name: "Web Design", path: "/services/web-design", icon: Palette },
+  { name: "SEO & Google", path: "/services/seo-google", icon: Search },
+  { name: "Website Management", path: "/services/website-management", icon: Wrench },
 ];
 
 const Navbar = () => {
@@ -41,15 +45,41 @@ const Navbar = () => {
       isSecondaryNavHidden ? "top-0" : "top-12"
     }`}>
       <div className="container-tight">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex h-20 items-center">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
             <img src="/krc.png" alt="Kreative Creations" className="h-10 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-8">
-            {navLinks.map((link) => link.hasDropdown ? (
+          <div className="hidden lg:flex items-center gap-10 ml-auto mr-8">
+            {navLinks.map((link) => link.hasServicesDropdown ? (
+              <div key={link.path} className="group relative">
+                <button
+                  type="button"
+                  className={`flex items-center gap-1 text-sm font-medium transition-colors duration-200 link-underline ${
+                    pathname.startsWith("/services") ? "text-accent" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {link.name}
+                  <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" />
+                </button>
+                <div className="invisible absolute left-1/2 top-full z-50 mt-0 w-56 -translate-x-1/2 translate-y-1 rounded-xl border border-border bg-card p-2 opacity-0 shadow-medium transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                  {serviceLinks.map((service) => (
+                    <Link
+                      key={service.path}
+                      href={service.path}
+                      className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-foreground transition-colors hover:bg-secondary hover:text-accent"
+                    >
+                      <span className="flex h-8 w-8 items-center justify-center rounded-md bg-accent/10 text-accent">
+                        <service.icon className="h-4 w-4" />
+                      </span>
+                      <span>{service.name}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ) : link.hasDropdown ? (
               <div key={link.path} className="group relative">
                 <Link
                   href={link.path}
@@ -90,9 +120,6 @@ const Navbar = () => {
                 </Link>
               </Button>
             )}
-            <Button variant="coral" asChild>
-              <Link href="/contact">Start Your Project</Link>
-            </Button>
             <Button variant="coral-outline" asChild>
               <Link href="/pay">Pay Invoice</Link>
             </Button>
@@ -100,8 +127,10 @@ const Navbar = () => {
 
           {/* Mobile Menu Button */}
           <button
-            className="lg:hidden p-2 text-foreground"
+            className="ml-auto p-2 text-foreground lg:hidden"
             onClick={() => setIsOpen(!isOpen)}
+            aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={isOpen}
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -112,7 +141,25 @@ const Navbar = () => {
       {isOpen && (
         <div className="lg:hidden glass border-t border-border animate-fade-in">
           <div className="container-tight py-6 space-y-4">
-            {navLinks.map((link) => link.hasDropdown ? (
+            {navLinks.map((link) => link.hasServicesDropdown ? (
+              <div key={link.path} className="space-y-2">
+                <button type="button" className={`flex items-center gap-1 text-base font-medium ${pathname.startsWith("/services") ? "text-accent" : "text-muted-foreground"}`}>
+                  {link.name}
+                  <ChevronDown className="h-4 w-4" />
+                </button>
+                {serviceLinks.map((service) => (
+                  <Link
+                    key={service.path}
+                    href={service.path}
+                    onClick={() => setIsOpen(false)}
+                    className="ml-3 flex items-center gap-2 border-l border-accent/30 pl-3 text-sm font-medium text-muted-foreground hover:text-accent"
+                  >
+                    <service.icon className="h-4 w-4" />
+                    {service.name}
+                  </Link>
+                ))}
+              </div>
+            ) : link.hasDropdown ? (
               <div key={link.path} className="space-y-2">
                 <Link href={link.path} onClick={() => setIsOpen(false)} className={`block text-base font-medium transition-colors ${pathname.startsWith("/courses") ? "text-accent" : "text-muted-foreground"}`}>{link.name}</Link>
                 <Link href="/courses/website-development" onClick={() => setIsOpen(false)} className="ml-3 flex items-center gap-2 border-l border-accent/30 pl-3 text-sm font-medium text-muted-foreground hover:text-accent"><Code2 className="h-4 w-4" /> Website Development</Link>
@@ -136,11 +183,6 @@ const Navbar = () => {
                 Admin Dashboard
               </Link>
             )}
-            <Button variant="coral" className="w-full mt-4" asChild>
-              <Link href="/contact" onClick={() => setIsOpen(false)}>
-                Start Your Project
-              </Link>
-            </Button>
             <Button variant="coral-outline" className="w-full mt-2" asChild>
               <Link href="/pay" onClick={() => setIsOpen(false)}>
                 Pay Invoice

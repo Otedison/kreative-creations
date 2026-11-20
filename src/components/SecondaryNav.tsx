@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Phone, Mail } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -41,20 +42,25 @@ const SecondaryNav = () => {
               className="flex items-center gap-2 text-primary-foreground/80 hover:text-coral transition-colors duration-200 text-sm"
             >
               <Phone className="w-4 h-4" />
-              <span>+2547 43 653 115</span>
+              <span className="hidden sm:inline">+2547 43 653 115</span>
             </a>
             <a
               href="mailto:hello@kreativecreations.co.ke"
               className="flex items-center gap-2 text-primary-foreground/80 hover:text-coral transition-colors duration-200 text-sm"
             >
               <Mail className="w-4 h-4" />
-              <span>hello@kreativecreations.co.ke</span>
+              <span className="hidden md:inline">hello@kreativecreations.co.ke</span>
             </a>
           </div>
 
-          {/* Right Side - Optional: Working Hours or additional info */}
-          <div className="hidden md:flex items-center gap-2 text-primary-foreground/60 text-sm">
-            <span>Mon - Fri: 8:00 AM - 6:00 PM</span>
+          {/* Secondary navigation links */}
+          <div className="flex items-center gap-5 text-sm">
+            <Link href="/blog" className="text-primary-foreground/80 hover:text-coral transition-colors duration-200">
+              Blog
+            </Link>
+            <Link href="/about" className="text-primary-foreground/80 hover:text-coral transition-colors duration-200">
+              About Us
+            </Link>
           </div>
         </div>
       </div>
@@ -63,4 +69,3 @@ const SecondaryNav = () => {
 };
 
 export default SecondaryNav;
-
