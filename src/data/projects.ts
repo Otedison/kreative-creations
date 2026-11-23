@@ -19,6 +19,9 @@ import mcdon3 from "@/images/projects/mcdon/don3.png";
 import twiddle1 from "@/images/projects/twiddle/t1.png";
 import twiddle2 from "@/images/projects/twiddle/t2.png";
 import twiddle3 from "@/images/projects/twiddle/t3.png";
+import bnjwLms from "@/images/projects/bnjw LMS/BNJW LMS.png";
+import bnjwLms1 from "@/images/projects/bnjw LMS/BNJWLMS1.png";
+import bnjwLms2 from "@/images/projects/bnjw LMS/BNJWLMS2.png";
 
 export interface Project {
   slug: string;
@@ -44,6 +47,26 @@ export interface Project {
 }
 
 const rawProjects: Project[] = [
+  {
+    slug: "bnjw-learning-management-system",
+    title: "BNJW Learning Management System",
+    category: "Learning Management System",
+    image: "/images/projects/bnjw LMS/BNJW LMS.png",
+    heroImage: "/images/projects/bnjw LMS/BNJW LMS.png",
+    description: "A compassionate learning platform for grief, loss, and psychosocial support courses, with course discovery, student dashboards, assessments, and secure payments.",
+    challenge: "The organization needed a dedicated digital learning environment that could present sensitive support content professionally while giving learners and instructors clear tools for enrolment, course access, assessments, payments, and progress tracking.",
+    solution: "We built a responsive learning management system with a public course catalogue, foundational course discovery, student and teacher login areas, learning dashboards, course progress, assessments, certificates, resources, exams, grades, and payment management. The platform combines an approachable public experience with structured workflows for continuing education.",
+    results: ["Created a centralized platform for grief and psychosocial support education", "Simplified course discovery, enrolment, and payment tracking", "Provided learners with progress, assessment, grade, and resource tools", "Added dedicated experiences for students and course instructors"],
+    timeline: "4 weeks",
+    industry: "Education & Training",
+    services: ["Learning Management System", "Student Portal", "Course Catalogue", "Assessment & Payment Workflows"],
+    gallery: [
+      "/images/projects/bnjw LMS/BNJW LMS.png",
+      "/images/projects/bnjw LMS/BNJWLMS1.png",
+      "/images/projects/bnjw LMS/BNJWLMS2.png",
+    ],
+    projectUrl: "https://courses.bonganajacintawellness.com/",
+  },
   {
     slug: "bonga-na-jacinta-wellness",
     title: "Bonga na Jacinta Wellness",
@@ -294,6 +317,9 @@ const imageSources: Record<string, string> = {
   "/images/projects/twiddle/t1.png": twiddle1.src,
   "/images/projects/twiddle/t2.png": twiddle2.src,
   "/images/projects/twiddle/t3.png": twiddle3.src,
+  "/images/projects/bnjw LMS/BNJW LMS.png": bnjwLms.src,
+  "/images/projects/bnjw LMS/BNJWLMS1.png": bnjwLms1.src,
+  "/images/projects/bnjw LMS/BNJWLMS2.png": bnjwLms2.src,
 };
 
 const resolveImage = (path: string): string => imageSources[path] ?? path;
